@@ -111,7 +111,7 @@ if($PowerShellVersion -ge "3")
 }
 else
 {
-    Write-Host "This script required PowerSehll 3 or above"
+    Write-Host "This script required PowerShell 3 or above"
     Write-Host "Current installed PowerShell version is $($PSVersionTable.PSVersion)"
     Write-Host "Please Update PowerShell version"
     Write-Host ""
