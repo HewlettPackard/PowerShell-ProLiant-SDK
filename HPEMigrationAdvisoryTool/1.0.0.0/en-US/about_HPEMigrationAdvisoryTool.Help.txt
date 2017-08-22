@@ -1,0 +1,139 @@
+TOPIC 
+	about_HPEMigrationAdvisoryTool
+	
+SHORT DESCRIPTION	
+	This module provides Cmdlets to migrate HPE Cmdlets to latest HPE Cmdlets module.
+	
+LONG DESCRIPTION
+	This module provide Invoke-HPECmdletMigration Cmdlet. Invoke-HPECmdletMigration Cmdlet suggests changes for existing HPE Cmdlets used in PowerShell scripts to update to the latest HPE Cmdlets module.
+	Migration suggestion are provided for the following items.
+	1) ModuleName
+	2) Cmdlets
+	3) Parameter
+	4) Property
+	5) value.
+	
+	
+	CmdletChangeItem Properties.
+	
+	ChangeType         :  Provides change type (Rename,Classify,Fragment, Obsolete)
+	LineNumber         :  Line number of Cmdlet in the script file 
+	LinePosition       :  Line position of Cmdlet in the script file.
+	Severity           :  Severity of changes. if it is high then Cmdlet execution will be failed if suggested changes is not considerd. (High,Mediem,Low)
+	Cmdlet             :  Provide Existing Cmdlet and NewCmdlet If the Cmdlet name has changed.
+	Parameter          :  Provide the parameter which required changes.Each item of parameter contains ExistingName and NewName.
+	ParameterReference :  Provide references for the parameter listed under 'Parameter' property. Each item contains (LineNumber, LinePosition, Name).
+	Property           :  Provide the property which required changes.Each item of property contains ExistingName and NewName.
+	PropertyReference  :  Provide references for the property listed under 'Property property. Each item contains (LineNumber, LinePosition, Name).
+	Value              :  Provide the value which required changes.Each item of value contains ExistingName and NewName.
+	ValueReference     :  Provide references for the value listed under 'Value' property. Each item contains (LineNumber, LinePosition, Name).
+	
+	
+	Method Exposed By CmdletChangeItem.
+	
+	GetAdditionalMigrationInfo() :- This returns all the Changes (Parameter,Property,value) for the Cmdlet to migrate to latest HPE Cmdlets module.
+	
+	GetPipelineInputVariable() :- Returns the pipeline variable name.(If not pipeline input varaible then it return null).
+	
+	GetReturnVaraible() :-	Returns the variable name where Cmldet result is stored.
+	
+	
+	Enum Exposed by HPECmdletMigration.
+	
+	[HPE.MigrationAdvisoryTool.ChangeItemType] :-  provide name for change item. (Cmdlet,Parameter,Property,Value).
+	
+	[HPE.MigrationAdvisoryTool.ChangeType] :-  provide change item type (Rename, Classify, Fragment, Obsolete).
+	
+NOTE
+	1) This Cmldet provides suggestion based on Cmdlets recognised as PowerShell cmdlet token. If the Cmldet is passed as string and invoke through Invoke-Command
+		then no suggestion will provided for such Cmdlets.
+	2) If the change type is "Classify" in that case ParameterReference/PropertyRefrence will be null. Update the script with new Cmdlet and Parameter/Property (if availiable).
+	
+	3) All the migraion suggestions are provided in context to HPE Cmdlets.
+	4) If the there is no suggestion for input script file,In that case the script file has Cmdlets which dont required any change for the migration.
+
+	
+TROUBLESHOOTING NOTE
+	
+	
+	
+EXAMPLES
+	PS C:\> $returnObject = Invoke-HPECmdletMigration -ScriptFile C:\powerTest.ps1 -CmdletModule HPBIOSCmdlets
+
+PS C:\> $returnObject 
+
+
+ChangeType         : Rename
+LineNumber         : 7
+LinePosition       : 30
+Severity           : High
+Cmdlet             : Existing : Set-HPBIOSPowerprofile; New : Set-HPEBIOSPowerProfile
+Parameter          : {HPPowerProfile}
+ParameterReference : {HPPowerProfile}
+Property           : {StatusType}
+PropertyReference  : {StatusType}
+Value              : {Balanced}
+ValueReference     : {Balanced}
+
+ChangeType         : Rename
+LineNumber         : 24
+LinePosition       : 30
+Severity           : High
+Cmdlet             : Existing : Set-HPBIOSPowerProfile; New : Set-HPEBIOSPowerProfile
+Parameter          : {HPPowerProfile}
+ParameterReference : {hpPowerprofile}
+Property           : 
+PropertyReference  : 
+Value              : {Balanced, Maximum_Performance}
+ValueReference     : {balanced, maximum_Performance}
+
+ChangeType         : Rename
+LineNumber         : 30
+LinePosition       : 2
+Severity           : High
+Cmdlet             : Existing : Set-HPBIOSPowerProfile; New : Set-HPEBIOSPowerProfile
+Parameter          : {hppowerprofile}
+ParameterReference : {hppowerprofile}
+Property           : 
+PropertyReference  : 
+Value              : {balanced}
+ValueReference     : {balanced}
+
+
+
+PS C:\> $returnObject [0].Parameter
+
+ExistingName   NewName     
+------------   -------     
+HPPowerProfile PowerProfile
+
+
+
+PS C:\> $returnObject [0].ParameterReference
+
+LineNumber LinePosition Name          
+---------- ------------ ----          
+         2           24 HPPowerProfile
+
+
+
+PS C:\> $returnObject [0].Value
+
+ExistingValue NewValue                   
+------------- --------                   
+Balanced      BalancedPowerAndPerformance
+
+
+
+PS C:\> $returnObject [0].ValueReference
+
+LineNumber LinePosition Name    
+---------- ------------ ----    
+         2           40 Balanced
+	
+KEYWORDS
+	
+	
+	
+SEE ALSO
+	
