@@ -1,0 +1,3 @@
+﻿Name,Description,Filename,Command,ComponentName,UpdatableBy
+TestInstallSet1,Test InstallSet Feature,ilo5_120.bin,ResetServer,Component1,Bmc
+,,cp033330.exe,ApplyUpdate,Component2,Uefi;RuntimeAgent
