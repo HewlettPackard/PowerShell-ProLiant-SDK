@@ -1381,22 +1381,18 @@ function Set-SNMPExample21
         $netSerOdataId = $mgrData.NetworkProtocol.'@odata.id'
         $netSerData = Get-HPERedfishDataRaw -odataid $netSerOdataId -Session $session
         
-        if($netSerData.Oem.Hp.Links.PSObject.properties.name -notcontains 'SNMPService')
+        if($netSerData.Oem.Hpe.Links.PSObject.properties.name -notcontains 'SNMPService')
         {
             Write-Host 'SNMP services not available in Manager Network Service'
         }
         else
         {
-            $snmpSerOdataId = $netSerData.Oem.Hp.Links.SNMPService.'@odata.id'
+            $snmpSerOdataId = $netSerData.Oem.Hpe.Links.SNMPService.'@odata.id'
             
             $snmpSerData = Get-HPERedfishDataRaw -odataid $snmpSerOdataId -Session $session
 
             # create hashtable object according to the parameters provided by user
             $snmpSetting = @{}
-            if($mode -ne '' -and $Mode -ne $null)
-            {
-                $snmpSetting.Add('Mode',$Mode)
-            }
             if($AlertsEnabled -ne $null)
             {
                 $snmpSetting.Add('AlertsEnabled',[System.Convert]::ToBoolean($AlertsEnabled))
