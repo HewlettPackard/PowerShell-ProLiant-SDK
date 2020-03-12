@@ -1,0 +1,2 @@
+﻿Name,Description,Filename,Command,ComponentName,UpdatableBy
+TestInstallSet1,Test InstallSet Feature,ilo5_120.bin,ApplyUpdate,Component1,Bmc
