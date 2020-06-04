@@ -1380,20 +1380,35 @@ function Set-SNMPExample21
         $mgrData = Get-HPERedfishDataRaw -odataid $mgr -Session $session
         $netSerOdataId = $mgrData.NetworkProtocol.'@odata.id'
         $netSerData = Get-HPERedfishDataRaw -odataid $netSerOdataId -Session $session
-        
+
+        ## for iLO 4 
+        #if($netSerData.Oem.Hp.Links.PSObject.properties.name -notcontains 'SNMPService')
+
+        ## for iLO 5
         if($netSerData.Oem.Hpe.Links.PSObject.properties.name -notcontains 'SNMPService')
         {
             Write-Host 'SNMP services not available in Manager Network Service'
         }
         else
         {
+            ## for iLO 4
+            #$snmpSerOdataId = $netSerData.Oem.Hp.Links.SNMPService.'@odata.id'
+
+            ## for iLO 5
             $snmpSerOdataId = $netSerData.Oem.Hpe.Links.SNMPService.'@odata.id'
             
             $snmpSerData = Get-HPERedfishDataRaw -odataid $snmpSerOdataId -Session $session
 
             # create hashtable object according to the parameters provided by user
             $snmpSetting = @{}
-            if($AlertsEnabled -ne $null)
+
+            ## for iLO 4
+            #if($mode -ne '' -and $Mode -ne $null)
+            #{
+            #    $snmpSetting.Add('Mode',$Mode)
+            #}
+            #if($AlertsEnabled -ne $null)
+
             {
                 $snmpSetting.Add('AlertsEnabled',[System.Convert]::ToBoolean($AlertsEnabled))
             }
@@ -1415,7 +1430,7 @@ function Set-SNMPExample21
     # Disconnect the session after use
     Disconnect-HPERedfish -Session $session
 }
-## This example is for iLO 4 only.
+## This example is for both iLO 4(make sure to uncomment respective commands) and iLO 5.
 #Set-SNMPExample21 -Address $Address -Credential $cred -Mode Agentless -AlertsEnabled $false
  
 function Get-SchemaExample22
